@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Password Strength Analyzer</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Cyber Quest 01 · Password Security</div>
+    <h1>Password Strength Analyzer</h1>
+    <p>Every password is a pin-tumbler lock. Five pins, five conditions — the cylinder only turns once all of them align.</p>
+  </header>
+
+  <!-- Main analyzer card -->
+  <div class="card">
+    <div class="lock-stage">
+      <div class="cylinder">
+        <svg viewBox="0 0 280 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- housing -->
+          <rect x="10" y="30" width="260" height="90" rx="12" fill="#141B29" stroke="#2C3650" stroke-width="2"/>
+          <!-- shear line -->
+          <line x1="20" y1="72" x2="260" y2="72" stroke="#3A4560" stroke-width="1" stroke-dasharray="3 4"/>
+          <!-- plug / keyway -->
+          <circle id="plug" cx="140" cy="72" r="26" fill="#0F1420" stroke="#3A4560" stroke-width="2" style="transition:stroke .3s ease;"/>
+          <rect x="137" y="56" width="6" height="18" rx="2" fill="#3A4560" id="keyway-stem"/>
+          <path id="keyway-bow" d="M132 74 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0" fill="none" stroke="#3A4560" stroke-width="2"/>
+          <!-- pins (5) -->
+          <g id="pins">
+            <rect class="pin" data-pin="0" x="38"  y="34" width="16" height="34" rx="3" fill="#4A5578"/>
+            <rect class="pin" data-pin="1" x="86"  y="34" width="16" height="34" rx="3" fill="#4A5578"/>
+            <rect class="pin" data-pin="2" x="132" y="34" width="16" height="34" rx="3" fill="#4A5578"/>
+            <rect class="pin" data-pin="3" x="178" y="34" width="16" height="34" rx="3" fill="#4A5578"/>
+            <rect class="pin" data-pin="4" x="226" y="34" width="16" height="34" rx="3" fill="#4A5578"/>
+          </g>
+        </svg>
+      </div>
+      <div class="pin-label-row">
+        <div class="pin-label" id="lbl-0">LENGTH</div>
+        <div class="pin-label" id="lbl-1">CASE MIX</div>
+        <div class="pin-label" id="lbl-2">NUMERALS</div>
+        <div class="pin-label" id="lbl-3">SYMBOLS</div>
+        <div class="pin-label" id="lbl-4">NOT REUSED</div>
+      </div>
+      <div class="lock-status" id="lockStatus">SECURED — 0 / 5 PINS ALIGNED</div>
+    </div>
+
+    <div class="field">
+      <label for="pw">Enter a password to analyze</label>
+      <div class="input-row">
+        <input id="pw" type="password" placeholder="Type or paste a password…" autocomplete="off" spellcheck="false">
+        <button class="icon-btn" id="toggleVis" title="Show/hide password" type="button">&#128065;</button>
+      </div>
+    </div>
+
+    <div class="meter-row">
+      <div class="meter-track"><div class="meter-fill" id="meterFill"></div></div>
+      <div class="meter-label" id="meterLabel">— empty —</div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat">
+        <div class="k">Estimated entropy</div>
+        <div class="v" id="entropyVal">0.0 bits</div>
+      </div>
+      <div class="stat">
+        <div class="k">Est. time to crack (offline)</div>
+        <div class="v" id="crackVal">instant</div>
+      </div>
+    </div>
+
+    <div class="checklist" id="checklist"></div>
+  </div>
+
+  <!-- Suggestions -->
+  <div class="card">
+    <h2 class="section-title">Stronger alternatives</h2>
+    <p class="section-sub">Generated locally in your browser using a cryptographically secure random source — never sent anywhere.</p>
+    <div class="sugg-list" id="suggList"></div>
+    <button class="btn full" id="regenBtn" type="button">↻ Generate new suggestions</button>
+  </div>
+
+  <!-- History / reuse simulation -->
+  <div class="card">
+    <h2 class="section-title">Reuse check <span style="color:var(--text-faint); font-family:var(--font-mono); font-size:12px;">(simulated password database)</span></h2>
+    <p class="section-sub">Save a password's fingerprint below to simulate a "previous passwords" table. Only a SHA-256 hash is stored — plaintext never leaves the input field. The 5th lock pin checks new entries against this list.</p>
+    <div class="history-list" id="historyList"></div>
+    <div class="history-empty" id="historyEmpty">No passwords saved to history yet.</div>
+    <button class="btn full" id="saveHistBtn" type="button">+ Save current password to history</button>
+    <div class="reuse-flag" id="reuseFlag">⚠ This password matches one already in your history — treat it as compromised and choose another.</div>
+  </div>
+
+  <p class="footnote">
+    <b>How this works:</b> strength is estimated from Shannon entropy — password length × log₂(character-pool size) — then checked against a short list of breach-common passwords and your saved history. Crack-time assumes an offline attacker at 10 billion guesses/second, a realistic figure for a modern GPU rig against an unsalted hash. Nothing here is transmitted; all analysis, hashing, and generation run client-side.
+  </p>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
